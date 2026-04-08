@@ -1,0 +1,42 @@
+#!/bin/bash
+#PBS -N star_align_sus_scrofa
+#PBS -l nodes=1:ppn=12,mem=100gb,walltime=72:00:00
+#PBS -q high_mem
+#PBS -m ae
+#PBS -M seuemail@dominio.com
+
+cd $PBS_O_WORKDIR
+
+# Carrega os módulos
+source /etc/profile.d/modules.sh
+module load star/2.7.9a
+
+# Caminhos
+GENOME_DIR="/home/ps11038/genoma/IndexedGenome"
+GTF_FILE="/home/ps11038/genoma/Sus_scrofa.Sscrofa11.1.111.gtf"
+INPUT_DIR="/home/ps11038/trimmomatic"
+OUTPUT_DIR="/home/ps11038/star_out"
+
+mkdir -p $OUTPUT_DIR
+
+# Loop para alinhar as 18 amostras
+for i in {1..18}
+do
+    SAMPLE="MSD-${i}-RNASeq030-Ilmn-mRNA_S${i}_L001"
+    R1="${INPUT_DIR}/${SAMPLE}_R1_paired.fq.gz"
+    R2="${INPUT_DIR}/${SAMPLE}_R2_paired.fq.gz"
+
+    echo "Rodando STAR para $SAMPLE ..."
+
+    STAR \
+        --runThreadN 12 \
+        --genomeDir $GENOME_DIR \
+        --readFilesIn $R1 $R2 \
+        --readFilesCommand zcat \
+        --sjdbGTFfile $GTF_FILE \
+        --outSAMtype BAM SortedByCoordinate \
+        --quantMode GeneCounts \
+        --outFileNamePrefix ${OUTPUT_DIR}/${SAMPLE}_
+done
+
+echo "✅ Pipeline finalizada!"

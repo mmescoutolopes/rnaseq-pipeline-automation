@@ -1,0 +1,286 @@
+---
+title: "Workflow RNA-seq Analysis"
+author: "Mariana Mescouto Lopes"
+date: '2026'
+subtitle: "Analysis of count matrix data"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    theme: flatly
+    code_folding: show
+    fig_width: 10
+    fig_height: 6
+  pdf_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  fig.width = 10,
+  fig.height = 6,
+  cache = FALSE
+)
+
+#Set working directory
+setwd("~/Library/CloudStorage/OneDrive-Personal/Documentos/GitHub")
+
+# Create directories for output organization
+dir.create("results", showWarnings = FALSE)
+dir.create("results/figures", showWarnings = FALSE)
+dir.create("results/tables", showWarnings = FALSE)
+dir.create("results/gsea", showWarnings = FALSE)
+```
+
+## Overview
+
+This workflow demonstrates a basic RNA-seq analysis pipeline.  
+To run the analysis, update the file paths according to your local environment.
+
+This workflow performs:
+- Data preprocessing
+- Differential expression analysis
+- Data visualization
+- Functional enrichment analysis (GSEA)
+
+# 1. Packges
+
+To install packages, use: install.packages("package_name")
+
+Then load them using: library(package_name)
+
+```{r libraries}
+suppressPackageStartupMessages({
+  # Diferential analysis
+  library(DESeq2)
+  library(edgeR) 
+  library(limma)
+  library(fdrtool)
+  
+  # Data manipulation
+  library(dplyr)
+  library(readr)
+  library(readxl)
+  library(tibble)
+  
+  # Visualization
+  library(ggplot2)
+  library(pheatmap)
+  library(ggrepel)
+  library(RColorBrewer)
+  library(corrplot)
+  library(plotly)
+  
+  # Functional analysis
+  library(fgsea)
+  library(biomaRt)
+  
+  # Tables
+  library(DT)
+  library(kableExtra)
+})
+```
+
+# 2. Data preprocessing
+
+Load count matrix and sample metadata
+
+```{r load-and-filter}
+
+df <- read_delim("rnaseq_data.csv", delim = ";", show_col_types = FALSE)
+metadata <- read_excel("samples.xlsx")
+
+# Dataset information
+cat(sprintf("Raw dataset: %d genes × %d columns\n", nrow(df), ncol(df)))
+cat(sprintf("Metadata: %d samples\n", nrow(metadata)))
+```
+
+## Sample selection and gene formatting
+
+```{r gene-sample}
+ctrl_samples <- grep("CON_", colnames(df), value = TRUE)
+treat_samples <- grep("BET_", colnames(df), value = TRUE)
+
+cat(sprintf("Samples: %d control + %d treated\n", 
+            length(ctrl_samples), length(treat_samples)))
+
+# Set gene IDs as row names
+genes <- df$gene
+df <- as.matrix(df[, c(ctrl_samples, treat_samples)])
+rownames(df) <- genes
+```
+
+## Filtering low expressed genes
+
+Criteria: keep genes with ≥5 counts in at least 6 samples
+
+```{r filter}
+filter_mask <- rowSums(df >= 5) >= 6
+expr_genes <- genes[filter_mask]
+df_filtered <- df[filter_mask, ]
+
+cat(sprintf("Initial number of genes: %d\n", nrow(df)))
+cat(sprintf("Filtered dataset: %d genes (%.1f%% retained)\n", 
+            nrow(df_filtered), 
+            100 * nrow(df_filtered) / nrow(df)))
+```
+
+## Metadata alignment
+
+```{r arrange}
+metadata_filtered <- metadata %>%
+  filter(ID %in% c(ctrl_samples, treat_samples)) %>%
+  arrange(match(ID, c(ctrl_samples, treat_samples)))
+```
+
+Save filtered data 
+
+```{r save}
+write_csv(as.data.frame(df_filtered), "results/tables/filtered_data.csv")
+```
+
+
+# 3. Exploratory Data Analysis
+
+## Data distribution
+
+Evaluate data quality and filtering criteria
+
+```{r basic-observations}
+total_expression <- rowSums(df_filtered)
+
+p_dist <- ggplot(data.frame(total_expression), 
+                 aes(x = log10(total_expression + 1))) +
+  geom_histogram(bins = 50, fill = "steelblue", alpha = 0.7) +
+  geom_vline(xintercept = log10(c(10, 100, 1000)), 
+             linetype = "dashed", color = "red", alpha = 0.7) +
+  labs(
+    title = "Expression distribution",
+    subtitle = "Red lines: 10, 100, 1000 reads",
+    x = "log10(total expression)",
+    y = "Number of genes"
+  ) +
+  theme_minimal()
+
+print(p_dist)
+```
+
+Most genes show low expression levels, which is expected in RNA-seq data. The filtering step removes lowly expressed genes, reducing noise and improving downstream analysis.
+
+## PCA
+
+Explore sample variability and identify potential clustering patterns
+
+1) Normalization 
+
+```{r normal}
+df_log <- log2(df_filtered + 1)
+```
+
+2) PCA computation
+
+```{r pca}
+pca <- prcomp(t(df_log), scale. = TRUE)
+pca_data <- data.frame(pca$x)
+
+pca_data$sample <- rownames(pca_data)
+pca_data$group <- ifelse(grepl("CON_", pca_data$sample), "Control", "Treated")
+```
+
+3) PCA plot
+
+```{r plot}
+p_pca <- ggplot(pca_data, aes(PC1, PC2, color = group)) +
+  geom_point(size = 3, alpha = 0.8) +
+  labs(
+    title = "PCA of RNA-seq samples",
+    x = paste0("PC1 (", round(summary(pca)$importance[2,1]*100, 1), "%)"),
+    y = paste0("PC2 (", round(summary(pca)$importance[2,2]*100, 1), "%)")
+  ) +
+  theme_minimal()
+
+print(p_pca)
+```
+
+PCA revealed no clear separation between control and treated samples, suggesting that the treatment effect is relatively subtle compared to the overall variability in the dataset.
+
+This may reflect either a mild biological response or inherent variability between samples.
+
+## Hierarchical clustering
+
+Assess sample similarity.
+
+```{r cluster}
+dist_mat <- dist(t(df_log))
+hc <- hclust(dist_mat)
+
+plot(hc, main = "Hierarchical clustering of samples")
+```
+Hierarchical clustering did not fully separate samples by condition, further supporting the observation that the treatment effect is modest.
+
+Some samples cluster independently of their group, indicating variability within conditions.
+
+## Heatmap
+
+Top 10 most highly expressed genes
+
+```{r heatmap-10}
+top_genes <- head(order(rowMeans(df_log), decreasing = TRUE), 10)
+
+pheatmap(df_log[top_genes, ],
+         scale = "row",
+         main = "Top 10 most expressed genes")
+```
+The heatmap of highly expressed genes shows no strong clustering by condition, suggesting that the most abundant genes are not strongly affected by the treatment.
+
+This is consistent with the PCA and clustering results.
+
+# 4. Differential analysis
+
+Organize metadata
+
+```{r diff-analysis}
+coldata <- DataFrame(
+  treatment = factor(metadata_filtered$TRAT),
+  ID = metadata_filtered$Identificação,
+  row.names = metadata_filtered$ID
+)
+
+#Check order
+if (!identical(colnames(df), rownames(coldata))) {
+  cat("⚠️Sampless...\n")
+  coldata <- coldata[colnames(df_filtered), ]
+}
+```
+
+DESeq2
+
+```{r deseq2}
+dds <- DESeqDataSetFromMatrix(
+  countData = df_filtered,
+  colData = coldata, 
+  design = ~ treatment
+)
+
+dds <- DESeq(dds)
+```
+
+Results
+
+```{r results-deseq}
+res <- results(dds, contrast = c("treatment", "BET", "CON"))
+
+res_summary <- data.frame(
+  Info = c("p-adj < 0.05", "p-adj < 0.10", "p-adj < 0.20"),
+  Value = c(
+    sum(res$padj < 0.05, na.rm = TRUE),
+    sum(res$padj < 0.10, na.rm = TRUE),
+    sum(res$padj < 0.20, na.rm = TRUE)
+  )
+)
+
+kable(res_summary) %>% kable_styling()
+```

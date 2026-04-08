@@ -1,0 +1,496 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Workflow RNA-seq Analysis},
+  pdfauthor={Mariana Mescouto Lopes},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Workflow RNA-seq Analysis}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Analysis of count matrix data}
+\author{Mariana Mescouto Lopes}
+\date{2026}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\subsection{Overview}\label{overview}
+
+This workflow demonstrates a basic RNA-seq analysis pipeline.\\
+To run the analysis, update the file paths according to your local
+environment.
+
+This workflow performs: - Data preprocessing - Differential expression
+analysis - Data visualization - Functional enrichment analysis (GSEA)
+
+\section{1. Packges}\label{packges}
+
+To install packages, use: install.packages(``package\_name'')
+
+Then load them using: library(package\_name)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{suppressPackageStartupMessages}\NormalTok{(\{}
+  \CommentTok{\# Diferential analysis}
+  \FunctionTok{library}\NormalTok{(DESeq2)}
+  \FunctionTok{library}\NormalTok{(edgeR) }
+  \FunctionTok{library}\NormalTok{(limma)}
+  \FunctionTok{library}\NormalTok{(fdrtool)}
+  
+  \CommentTok{\# Data manipulation}
+  \FunctionTok{library}\NormalTok{(dplyr)}
+  \FunctionTok{library}\NormalTok{(readr)}
+  \FunctionTok{library}\NormalTok{(readxl)}
+  \FunctionTok{library}\NormalTok{(tibble)}
+  
+  \CommentTok{\# Visualization}
+  \FunctionTok{library}\NormalTok{(ggplot2)}
+  \FunctionTok{library}\NormalTok{(pheatmap)}
+  \FunctionTok{library}\NormalTok{(ggrepel)}
+  \FunctionTok{library}\NormalTok{(RColorBrewer)}
+  \FunctionTok{library}\NormalTok{(corrplot)}
+  \FunctionTok{library}\NormalTok{(plotly)}
+  
+  \CommentTok{\# Functional analysis}
+  \FunctionTok{library}\NormalTok{(fgsea)}
+  \FunctionTok{library}\NormalTok{(biomaRt)}
+  
+  \CommentTok{\# Tables}
+  \FunctionTok{library}\NormalTok{(DT)}
+  \FunctionTok{library}\NormalTok{(kableExtra)}
+\NormalTok{\})}
+\end{Highlighting}
+\end{Shaded}
+
+\section{2. Data preprocessing}\label{data-preprocessing}
+
+Load count matrix and sample metadata
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df }\OtherTok{\textless{}{-}} \FunctionTok{read\_delim}\NormalTok{(}\StringTok{"rnaseq\_data.csv"}\NormalTok{, }\AttributeTok{delim =} \StringTok{";"}\NormalTok{, }\AttributeTok{show\_col\_types =} \ConstantTok{FALSE}\NormalTok{)}
+\NormalTok{metadata }\OtherTok{\textless{}{-}} \FunctionTok{read\_excel}\NormalTok{(}\StringTok{"samples.xlsx"}\NormalTok{)}
+
+\CommentTok{\# Dataset information}
+\FunctionTok{cat}\NormalTok{(}\FunctionTok{sprintf}\NormalTok{(}\StringTok{"Raw dataset: \%d genes × \%d columns}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, }\FunctionTok{nrow}\NormalTok{(df), }\FunctionTok{ncol}\NormalTok{(df)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Raw dataset: 35670 genes × 19 columns
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\FunctionTok{sprintf}\NormalTok{(}\StringTok{"Metadata: \%d samples}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, }\FunctionTok{nrow}\NormalTok{(metadata)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Metadata: 18 samples
+\end{verbatim}
+
+\subsection{Sample selection and gene
+formatting}\label{sample-selection-and-gene-formatting}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ctrl\_samples }\OtherTok{\textless{}{-}} \FunctionTok{grep}\NormalTok{(}\StringTok{"CON\_"}\NormalTok{, }\FunctionTok{colnames}\NormalTok{(df), }\AttributeTok{value =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{treat\_samples }\OtherTok{\textless{}{-}} \FunctionTok{grep}\NormalTok{(}\StringTok{"BET\_"}\NormalTok{, }\FunctionTok{colnames}\NormalTok{(df), }\AttributeTok{value =} \ConstantTok{TRUE}\NormalTok{)}
+
+\FunctionTok{cat}\NormalTok{(}\FunctionTok{sprintf}\NormalTok{(}\StringTok{"Samples: \%d control + \%d treated}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, }
+            \FunctionTok{length}\NormalTok{(ctrl\_samples), }\FunctionTok{length}\NormalTok{(treat\_samples)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Samples: 9 control + 9 treated
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Set gene IDs as row names}
+\NormalTok{genes }\OtherTok{\textless{}{-}}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{gene}
+\NormalTok{df }\OtherTok{\textless{}{-}} \FunctionTok{as.matrix}\NormalTok{(df[, }\FunctionTok{c}\NormalTok{(ctrl\_samples, treat\_samples)])}
+\FunctionTok{rownames}\NormalTok{(df) }\OtherTok{\textless{}{-}}\NormalTok{ genes}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Filtering low expressed
+genes}\label{filtering-low-expressed-genes}
+
+Criteria: keep genes with ≥5 counts in at least 6 samples
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{filter\_mask }\OtherTok{\textless{}{-}} \FunctionTok{rowSums}\NormalTok{(df }\SpecialCharTok{\textgreater{}=} \DecValTok{5}\NormalTok{) }\SpecialCharTok{\textgreater{}=} \DecValTok{6}
+\NormalTok{expr\_genes }\OtherTok{\textless{}{-}}\NormalTok{ genes[filter\_mask]}
+\NormalTok{df\_filtered }\OtherTok{\textless{}{-}}\NormalTok{ df[filter\_mask, ]}
+
+\FunctionTok{cat}\NormalTok{(}\FunctionTok{sprintf}\NormalTok{(}\StringTok{"Initial number of genes: \%d}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, }\FunctionTok{nrow}\NormalTok{(df)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Initial number of genes: 35670
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\FunctionTok{sprintf}\NormalTok{(}\StringTok{"Filtered dataset: \%d genes (\%.1f\%\% retained)}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{, }
+            \FunctionTok{nrow}\NormalTok{(df\_filtered), }
+            \DecValTok{100} \SpecialCharTok{*} \FunctionTok{nrow}\NormalTok{(df\_filtered) }\SpecialCharTok{/} \FunctionTok{nrow}\NormalTok{(df)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Filtered dataset: 5764 genes (16.2% retained)
+\end{verbatim}
+
+\subsection{Metadata alignment}\label{metadata-alignment}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{metadata\_filtered }\OtherTok{\textless{}{-}}\NormalTok{ metadata }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(ID }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(ctrl\_samples, treat\_samples)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{arrange}\NormalTok{(}\FunctionTok{match}\NormalTok{(ID, }\FunctionTok{c}\NormalTok{(ctrl\_samples, treat\_samples)))}
+\end{Highlighting}
+\end{Shaded}
+
+Save filtered data
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{write\_csv}\NormalTok{(}\FunctionTok{as.data.frame}\NormalTok{(df\_filtered), }\StringTok{"results/tables/filtered\_data.csv"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{3. Exploratory Data Analysis}\label{exploratory-data-analysis}
+
+\subsection{Data distribution}\label{data-distribution}
+
+Evaluate data quality and filtering criteria
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_expression }\OtherTok{\textless{}{-}} \FunctionTok{rowSums}\NormalTok{(df\_filtered)}
+
+\NormalTok{p\_dist }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(total\_expression), }
+                 \FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \FunctionTok{log10}\NormalTok{(total\_expression }\SpecialCharTok{+} \DecValTok{1}\NormalTok{))) }\SpecialCharTok{+}
+  \FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{bins =} \DecValTok{50}\NormalTok{, }\AttributeTok{fill =} \StringTok{"steelblue"}\NormalTok{, }\AttributeTok{alpha =} \FloatTok{0.7}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept =} \FunctionTok{log10}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{100}\NormalTok{, }\DecValTok{1000}\NormalTok{)), }
+             \AttributeTok{linetype =} \StringTok{"dashed"}\NormalTok{, }\AttributeTok{color =} \StringTok{"red"}\NormalTok{, }\AttributeTok{alpha =} \FloatTok{0.7}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Expression distribution"}\NormalTok{,}
+    \AttributeTok{subtitle =} \StringTok{"Red lines: 10, 100, 1000 reads"}\NormalTok{,}
+    \AttributeTok{x =} \StringTok{"log10(total expression)"}\NormalTok{,}
+    \AttributeTok{y =} \StringTok{"Number of genes"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+
+\FunctionTok{print}\NormalTok{(p\_dist)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{RNA-seq-pipeline_files/figure-latex/basic-observations-1.pdf}}
+
+Most genes show low expression levels, which is expected in RNA-seq
+data. The filtering step removes lowly expressed genes, reducing noise
+and improving downstream analysis.
+
+\subsection{PCA}\label{pca}
+
+Explore sample variability and identify potential clustering patterns
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+\tightlist
+\item
+  Normalization
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df\_log }\OtherTok{\textless{}{-}} \FunctionTok{log2}\NormalTok{(df\_filtered }\SpecialCharTok{+} \DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  PCA computation
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pca }\OtherTok{\textless{}{-}} \FunctionTok{prcomp}\NormalTok{(}\FunctionTok{t}\NormalTok{(df\_log), }\AttributeTok{scale. =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{pca\_data }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(pca}\SpecialCharTok{$}\NormalTok{x)}
+
+\NormalTok{pca\_data}\SpecialCharTok{$}\NormalTok{sample }\OtherTok{\textless{}{-}} \FunctionTok{rownames}\NormalTok{(pca\_data)}
+\NormalTok{pca\_data}\SpecialCharTok{$}\NormalTok{group }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(}\FunctionTok{grepl}\NormalTok{(}\StringTok{"CON\_"}\NormalTok{, pca\_data}\SpecialCharTok{$}\NormalTok{sample), }\StringTok{"Control"}\NormalTok{, }\StringTok{"Treated"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  PCA plot
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{p\_pca }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(pca\_data, }\FunctionTok{aes}\NormalTok{(PC1, PC2, }\AttributeTok{color =}\NormalTok{ group)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{size =} \DecValTok{3}\NormalTok{, }\AttributeTok{alpha =} \FloatTok{0.8}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"PCA of RNA{-}seq samples"}\NormalTok{,}
+    \AttributeTok{x =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"PC1 ("}\NormalTok{, }\FunctionTok{round}\NormalTok{(}\FunctionTok{summary}\NormalTok{(pca)}\SpecialCharTok{$}\NormalTok{importance[}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{]}\SpecialCharTok{*}\DecValTok{100}\NormalTok{, }\DecValTok{1}\NormalTok{), }\StringTok{"\%)"}\NormalTok{),}
+    \AttributeTok{y =} \FunctionTok{paste0}\NormalTok{(}\StringTok{"PC2 ("}\NormalTok{, }\FunctionTok{round}\NormalTok{(}\FunctionTok{summary}\NormalTok{(pca)}\SpecialCharTok{$}\NormalTok{importance[}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{]}\SpecialCharTok{*}\DecValTok{100}\NormalTok{, }\DecValTok{1}\NormalTok{), }\StringTok{"\%)"}\NormalTok{)}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{()}
+
+\FunctionTok{print}\NormalTok{(p\_pca)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{RNA-seq-pipeline_files/figure-latex/plot-1.pdf}}
+
+PCA revealed no clear separation between control and treated samples,
+suggesting that the treatment effect is relatively subtle compared to
+the overall variability in the dataset.
+
+This may reflect either a mild biological response or inherent
+variability between samples.
+
+\subsection{Hierarchical clustering}\label{hierarchical-clustering}
+
+Assess sample similarity.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dist\_mat }\OtherTok{\textless{}{-}} \FunctionTok{dist}\NormalTok{(}\FunctionTok{t}\NormalTok{(df\_log))}
+\NormalTok{hc }\OtherTok{\textless{}{-}} \FunctionTok{hclust}\NormalTok{(dist\_mat)}
+
+\FunctionTok{plot}\NormalTok{(hc, }\AttributeTok{main =} \StringTok{"Hierarchical clustering of samples"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{RNA-seq-pipeline_files/figure-latex/cluster-1.pdf}}
+Hierarchical clustering did not fully separate samples by condition,
+further supporting the observation that the treatment effect is modest.
+
+Some samples cluster independently of their group, indicating
+variability within conditions.
+
+\subsection{Heatmap}\label{heatmap}
+
+Top 10 most highly expressed genes
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{top\_genes }\OtherTok{\textless{}{-}} \FunctionTok{head}\NormalTok{(}\FunctionTok{order}\NormalTok{(}\FunctionTok{rowMeans}\NormalTok{(df\_log), }\AttributeTok{decreasing =} \ConstantTok{TRUE}\NormalTok{), }\DecValTok{10}\NormalTok{)}
+
+\FunctionTok{pheatmap}\NormalTok{(df\_log[top\_genes, ],}
+         \AttributeTok{scale =} \StringTok{"row"}\NormalTok{,}
+         \AttributeTok{main =} \StringTok{"Top 10 most expressed genes"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{RNA-seq-pipeline_files/figure-latex/heatmap-10-1.pdf}}
+The heatmap of highly expressed genes shows no strong clustering by
+condition, suggesting that the most abundant genes are not strongly
+affected by the treatment.
+
+This is consistent with the PCA and clustering results.
+
+\section{4. Differential analysis}\label{differential-analysis}
+
+Organize metadata
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{coldata }\OtherTok{\textless{}{-}} \FunctionTok{DataFrame}\NormalTok{(}
+  \AttributeTok{treatment =} \FunctionTok{factor}\NormalTok{(metadata\_filtered}\SpecialCharTok{$}\NormalTok{TRAT),}
+  \AttributeTok{ID =}\NormalTok{ metadata\_filtered}\SpecialCharTok{$}\NormalTok{Identificação,}
+  \AttributeTok{row.names =}\NormalTok{ metadata\_filtered}\SpecialCharTok{$}\NormalTok{ID}
+\NormalTok{)}
+
+\CommentTok{\#Check order}
+\ControlFlowTok{if}\NormalTok{ (}\SpecialCharTok{!}\FunctionTok{identical}\NormalTok{(}\FunctionTok{colnames}\NormalTok{(df), }\FunctionTok{rownames}\NormalTok{(coldata))) \{}
+  \FunctionTok{cat}\NormalTok{(}\StringTok{"⚠️Sampless...}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\NormalTok{  coldata }\OtherTok{\textless{}{-}}\NormalTok{ coldata[}\FunctionTok{colnames}\NormalTok{(df\_filtered), ]}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+DESeq2
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{dds }\OtherTok{\textless{}{-}} \FunctionTok{DESeqDataSetFromMatrix}\NormalTok{(}
+  \AttributeTok{countData =}\NormalTok{ df\_filtered,}
+  \AttributeTok{colData =}\NormalTok{ coldata, }
+  \AttributeTok{design =} \SpecialCharTok{\textasciitilde{}}\NormalTok{ treatment}
+\NormalTok{)}
+
+\NormalTok{dds }\OtherTok{\textless{}{-}} \FunctionTok{DESeq}\NormalTok{(dds)}
+\end{Highlighting}
+\end{Shaded}
+
+Results
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{res }\OtherTok{\textless{}{-}} \FunctionTok{results}\NormalTok{(dds, }\AttributeTok{contrast =} \FunctionTok{c}\NormalTok{(}\StringTok{"treatment"}\NormalTok{, }\StringTok{"BET"}\NormalTok{, }\StringTok{"CON"}\NormalTok{))}
+
+\NormalTok{res\_summary }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+  \AttributeTok{Info =} \FunctionTok{c}\NormalTok{(}\StringTok{"p{-}adj \textless{} 0.05"}\NormalTok{, }\StringTok{"p{-}adj \textless{} 0.10"}\NormalTok{, }\StringTok{"p{-}adj \textless{} 0.20"}\NormalTok{),}
+  \AttributeTok{Value =} \FunctionTok{c}\NormalTok{(}
+    \FunctionTok{sum}\NormalTok{(res}\SpecialCharTok{$}\NormalTok{padj }\SpecialCharTok{\textless{}} \FloatTok{0.05}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \FunctionTok{sum}\NormalTok{(res}\SpecialCharTok{$}\NormalTok{padj }\SpecialCharTok{\textless{}} \FloatTok{0.10}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{),}
+    \FunctionTok{sum}\NormalTok{(res}\SpecialCharTok{$}\NormalTok{padj }\SpecialCharTok{\textless{}} \FloatTok{0.20}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{  )}
+\NormalTok{)}
+
+\FunctionTok{kable}\NormalTok{(res\_summary) }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{kable\_styling}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[t]{lr}
+\toprule
+Info & Value\\
+\midrule
+p-adj < 0.05 & 0\\
+p-adj < 0.10 & 0\\
+p-adj < 0.20 & 0\\
+\bottomrule
+\end{longtable}
+
+\end{document}
